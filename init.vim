@@ -12,6 +12,13 @@ Plug 'nvim-telescope/telescope.nvim'
 
 call plug#end()
 
+
+
+
+
+
+
+
 lua require('smear_cursor').enabled = true
 lua << EOF
 require("nvim-tree").setup()
