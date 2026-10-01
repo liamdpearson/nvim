@@ -12,6 +12,8 @@ Plug 'nvim-telescope/telescope.nvim'
 
 Plug 'neovim/nvim-lspconfig'
 
+Plug 'williamboman/mason.nvim'
+
 call plug#end()
 
 lua require('smear_cursor').enabled = true
@@ -30,10 +32,33 @@ tnoremap <Esc> <C-\><C-N>
 
 lua << EOF
 require("nvim-tree").setup()
+require("mason").setup()
+
+local java_settings = { java = { project = { sourcePaths = { "." } } } }
 
 vim.lsp.config("jdtls", {
-	root_markers = { ".jdtls-root" },
-	cmd_env = { JAVA_HOME = "/usr/lib/jvm/java-26-openjdk-amd64" },
+      -- project root = source root, worked out from the file's own package line
+      root_dir = function(bufnr, on_dir)
+              local dir = vim.fs.dirname(vim.api.nvim_buf_get_name(bufnr))
+              for _, line in ipairs(vim.api.nvim_buf_get_lines(bufnr, 0, 200, false)) do
+                      local pkg = line:match("^%s*package%s+([%w_.]+)%s*;")
+                      if pkg then
+                              for _ in pkg:gmatch("[^.]+") do
+                                      dir = vim.fs.dirname(dir)
+                              end
+                              break
+                      end
+              end
+              on_dir(dir)
+      end,
+      -- one jdtls cache per source root, named after its full path
+      cmd = function(dispatchers, config)
+              local data_dir = vim.fn.stdpath("cache") .. "/jdtls/workspace/" .. config.root_dir:gsub("/", "_")
+              return vim.lsp.rpc.start({ "jdtls", "-data", data_dir }, dispatchers, { env = config.cmd_env })
+      end,
+      cmd_env = { JAVA_HOME = "/usr/lib/jvm/java-25-openjdk-amd64" },
+      settings = java_settings,
+      init_options = { settings = java_settings },
 })
 vim.lsp.enable("jdtls")
 vim.diagnostic.config({ virtual_text = true,
