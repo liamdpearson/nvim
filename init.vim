@@ -10,6 +10,8 @@ Plug 'nvim-tree/nvim-tree.lua'
 Plug 'nvim-lua/plenary.nvim'                 " required dependency
 Plug 'nvim-telescope/telescope.nvim'
 
+Plug 'neovim/nvim-lspconfig'
+
 call plug#end()
 
 lua require('smear_cursor').enabled = true
@@ -28,6 +30,15 @@ tnoremap <Esc> <C-\><C-N>
 
 lua << EOF
 require("nvim-tree").setup()
+
+vim.lsp.config("jdtls", {
+	root_markers = { ".jdtls-root" },
+	cmd_env = { JAVA_HOME = "/usr/lib/jvm/java-26-openjdk-amd64" },
+})
+vim.lsp.enable("jdtls")
+vim.diagnostic.config({ virtual_text = true,
+			update_in_insert = false})
+
 vim.api.nvim_create_autocmd("VimEnter", {
     callback = function()
     	vim.cmd("NvimTreeToggle")
