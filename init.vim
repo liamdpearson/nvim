@@ -16,6 +16,10 @@ Plug 'williamboman/mason.nvim'
 
 call plug#end()
 
+set tabstop=4
+set shiftwidth=4
+set expandtab
+
 lua require('smear_cursor').enabled = true
 
 nnoremap <leader>ff <cmd>Telescope find_files<cr>
@@ -45,6 +49,9 @@ require("nvim-tree").setup({
         hidden = false,
       },
     },
+  },
+  filters = {
+      git_ignored = false,
   },
 })
 require("mason").setup()
