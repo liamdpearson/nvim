@@ -31,7 +31,22 @@ nnoremap <leader>tt <cmd>botright split \| resize 10 \| terminal<cr>
 tnoremap <Esc> <C-\><C-N>
 
 lua << EOF
-require("nvim-tree").setup()
+require("nvim-tree").setup({
+  renderer = {
+    icons = {
+      show = {
+        file = false,
+        folder = false,
+        folder_arrow = false,
+        git = false,
+        modified = false,
+        diagnostics = false,
+        bookmarks = false,
+        hidden = false,
+      },
+    },
+  },
+})
 require("mason").setup()
 
 local java_settings = { java = { project = { sourcePaths = { "." } } } }
