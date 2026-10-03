@@ -89,7 +89,7 @@ vim.diagnostic.config({ virtual_text = true,
 vim.api.nvim_create_autocmd("VimEnter", {
     callback = function()
     	vim.cmd("NvimTreeToggle")
-        vim.cmd("botright split | resize 10 | terminal")
+        vim.cmd("botright split | resize 5 | terminal")
     end,
 })
 EOF
