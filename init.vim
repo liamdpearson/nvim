@@ -17,6 +17,7 @@ call plug#end()
 set tabstop=4
 set shiftwidth=4
 set expandtab
+set nowrap
 
 lua require('smear_cursor').enabled = true
 
