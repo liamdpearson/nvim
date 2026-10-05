@@ -57,6 +57,7 @@ require("nvim-tree").setup({
   filters = {
       git_ignored = false,
   },
+  auto_reload_on_write = true,
   filesystem_watchers = {
     enable = true,
     debounce_delay = 50,
