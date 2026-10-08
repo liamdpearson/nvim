@@ -10,6 +10,8 @@ Plug 'nvim-telescope/telescope.nvim'
 Plug 'neovim/nvim-lspconfig'
 Plug 'williamboman/mason.nvim'
 Plug 'windwp/nvim-autopairs'
+Plug 'williamboman/mason-lspconfig.nvim'
+Plug 'mfussenegger/nvim-lint'
 
 call plug#end()
 
@@ -37,6 +39,8 @@ nnoremap <leader>pp <cmd>rightbelow vsplit \| terminal powershell.exe<cr>
 tnoremap <Esc> <C-\><C-N>
 
 lua << EOF
+
+vim.env.PATH = vim.fn.stdpath("data") .. "/mason/bin:" .. vim.env.PATH
 
 -- turns off icons
 require("nvim-tree").setup({
@@ -105,4 +109,32 @@ vim.api.nvim_create_autocmd("VimEnter", {
 })
 
 require("nvim-autopairs").setup {}
+
+require("mason-lspconfig").setup({
+    ensure_installed = { "clangd" }
+})
+
+vim.lsp.config("clangd", {
+    cmd = {
+        "clangd",
+        "--background-index",
+        "--clang-tidy",          -- Activates clang-tidy checks
+        "--header-insertion=iwyu"
+    },
+})
+
+vim.lsp.enable("clangd")
+
+local lint = require('lint')
+lint.linters_by_ft = {
+    c = { 'cppcheck' },
+    cpp = { 'cppcheck' },
+}
+
+vim.api.nvim_create_autocmd({ "BufWritePost", "BufReadPost" }, {
+    callback = function()
+        lint.try_lint()
+    end,
+})
+
 EOF
