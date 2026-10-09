@@ -40,7 +40,7 @@ lua << EOF
 
 require('smear_cursor').setup()
 
-vim.env.PATH = vim.fn.stdpath("data") .. "/mason/bin:" .. vim.env.PATH
+vim.env.PATH = vim.fn.stdpath("data") .. "/mason/bin;" .. vim.env.PATH
 
 -- turns off icons
 require("nvim-tree").setup({
@@ -89,10 +89,10 @@ vim.lsp.config("jdtls", {
       end,
       -- one jdtls cache per source root, named after its full path
       cmd = function(dispatchers, config)
-              local data_dir = vim.fn.stdpath("cache") .. "/jdtls/workspace/" .. config.root_dir:gsub("/", "_")
-              return vim.lsp.rpc.start({ "jdtls", "-data", data_dir }, dispatchers, { env = config.cmd_env })
+              local data_dir = vim.fn.stdpath("cache") .. "/jdtls/workspace/" .. config.root_dir:gsub("[/\\:]", "_")
+              return vim.lsp.rpc.start({ "jdtls.cmd", "-data", data_dir }, dispatchers, { env = config.cmd_env })
       end,
-      cmd_env = { JAVA_HOME = "/usr/lib/jvm/java-25-openjdk-amd64" },
+      cmd_env = { JAVA_HOME = "C:/Program Files/Java/jdk-25.0.4.1" },
       settings = java_settings,
       init_options = { settings = java_settings },
 })
@@ -111,7 +111,7 @@ vim.api.nvim_create_autocmd("VimEnter", {
 require("nvim-autopairs").setup {}
 
 require("mason-lspconfig").setup({
-    ensure_installed = { "clangd" }
+    ensure_installed = { "clangd", "jdtls" }
 })
 
 vim.lsp.config("clangd", {
