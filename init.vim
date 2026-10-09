@@ -21,7 +21,6 @@ set shiftwidth=4
 set expandtab
 set nowrap
 
-lua require('smear_cursor').enabled = true
 
 " shortcuts for common commands
 nnoremap <leader>ff <cmd>Telescope find_files<cr>
@@ -32,13 +31,14 @@ nnoremap <leader>fh <cmd>Telescope help_tags<cr>
 nnoremap <leader>tr <cmd>NvimTreeToggle<cr>
 nnoremap <leader>vv <cmd>vsplit<cr>
 nnoremap <leader>hh <cmd>split<cr>
-nnoremap <leader>tt <cmd>botright split \| resize 8 \| terminal<cr>
-nnoremap <leader>pp <cmd>rightbelow vsplit \| terminal powershell.exe<cr>
+nnoremap <leader>tt <cmd>rightbelow vsplit \| terminal powershell.exe<cr>
 
 " to get back to normal mode inside terminal
 tnoremap <Esc> <C-\><C-N>
 
 lua << EOF
+
+require('smear_cursor').setup()
 
 vim.env.PATH = vim.fn.stdpath("data") .. "/mason/bin:" .. vim.env.PATH
 
@@ -104,7 +104,7 @@ vim.diagnostic.config({ virtual_text = true,
 vim.api.nvim_create_autocmd("VimEnter", {
     callback = function()
     	vim.cmd("NvimTreeToggle")
-        vim.cmd("botright split | resize 8 | terminal")
+        vim.cmd("botright split | resize 8 | terminal powershell")
     end,
 })
 
@@ -119,7 +119,8 @@ vim.lsp.config("clangd", {
         "clangd",
         "--background-index",
         "--clang-tidy",          -- Activates clang-tidy checks
-        "--header-insertion=iwyu"
+        "--header-insertion=iwyu",
+        "--query-driver=C:/TDM-GCC-64/bin/*"
     },
 })
 
@@ -138,3 +139,4 @@ vim.api.nvim_create_autocmd({ "BufWritePost", "BufReadPost" }, {
 })
 
 EOF
+
