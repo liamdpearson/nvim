@@ -126,17 +126,4 @@ vim.lsp.config("clangd", {
 
 vim.lsp.enable("clangd")
 
-local lint = require('lint')
-lint.linters_by_ft = {
-    c = { 'cppcheck' },
-    cpp = { 'cppcheck' },
-}
-
-vim.api.nvim_create_autocmd({ "BufWritePost", "BufReadPost" }, {
-    callback = function()
-        lint.try_lint()
-    end,
-})
-
 EOF
-
