@@ -12,6 +12,7 @@ Plug 'williamboman/mason.nvim'
 Plug 'windwp/nvim-autopairs'
 Plug 'williamboman/mason-lspconfig.nvim'
 Plug 'mfussenegger/nvim-lint'
+Plug 'nvim-treesitter/nvim-treesitter', {'branch': 'main', 'do': ':TSUpdate'}
 
 call plug#end()
 
@@ -175,5 +176,8 @@ vim.lsp.config("clangd", {
 })
 
 vim.lsp.enable("clangd")
+
+vim.env.CC = 'C:/TDM-GCC-64/bin/gcc.exe'
+require('nvim-treesitter').install({ 'c', 'cpp', 'java', 'lua', 'vim', 'vimdoc', 'query' })
 
 EOF
