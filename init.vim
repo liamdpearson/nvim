@@ -198,5 +198,3 @@ require('blink.cmp').setup({
 })
 
 EOF
-
-
