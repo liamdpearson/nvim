@@ -12,14 +12,19 @@ Plug 'williamboman/mason.nvim'
 Plug 'windwp/nvim-autopairs'
 Plug 'williamboman/mason-lspconfig.nvim'
 Plug 'mfussenegger/nvim-lint'
-Plug 'nvim-treesitter/nvim-treesitter', {'branch': 'main', 'do': ':TSUpdate'}
+Plug 'bluz71/vim-moonfly-colors'
+Plug 'nvim-treesitter/nvim-treesitter', { 'branch': 'main', 'do': ':TSUpdate' }
+Plug 'saghen/blink.cmp', { 'tag': 'v1.*' }
 
 call plug#end()
+
+colorscheme moonfly
 
 " set tab length
 set tabstop=4
 set shiftwidth=4
 set expandtab
+set termguicolors
 
 " no line wrap
 set nowrap
@@ -39,6 +44,9 @@ lua << EOF
 require('smear_cursor').setup()
 
 vim.env.PATH = vim.fn.stdpath("data") .. "/mason/bin;" .. vim.env.PATH
+
+-- tree-sitter CLI defaults to MSVC (cl.exe) on Windows; use TDM-GCC to build parsers
+vim.env.CC = "gcc"
 
 -- ai generated function
 local function my_on_attach(bufnr)
@@ -177,7 +185,18 @@ vim.lsp.config("clangd", {
 
 vim.lsp.enable("clangd")
 
-vim.env.CC = 'C:/TDM-GCC-64/bin/gcc.exe'
-require('nvim-treesitter').install({ 'c', 'cpp', 'java', 'lua', 'vim', 'vimdoc', 'query' })
+require('nvim-treesitter').install({ 'c', 'cpp', 'java', 'lua', 'vim', 'vimdoc', 'markdown' })
+
+vim.api.nvim_create_autocmd('FileType', {
+    callback = function() pcall(vim.treesitter.start) end,
+})
+
+require('blink.cmp').setup({
+    keymap = { preset = 'super-tab' },
+    completion = { documentation = { auto_show = true } },
+    sources = { default = { 'lsp', 'path', 'snippets', 'buffer' } },
+})
 
 EOF
+
+
